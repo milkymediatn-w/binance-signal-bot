@@ -1,0 +1,25 @@
+services:
+  - type: worker
+    name: binance-signal-bot
+    runtime: python
+    region: frankfurt        # Binance blocks US IPs (HTTP 451); Frankfurt or Singapore work
+    plan: starter            # persistent disks require a paid instance
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    disk:
+      name: botdata
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: DB_PATH
+        value: /data/bot.db
+      - key: PRESET
+        value: INTRADAY
+      - key: BOT_TOKEN
+        sync: false
+      - key: ADMIN_CHAT_ID
+        sync: false
+      - key: ACCESS_CODE
+        sync: false
